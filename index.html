@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mundial 2026 — Predictor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <span class="logo-icon">⚽</span>
+      <div>
+        <div class="logo-title">MUNDIAL 2026</div>
+        <div class="logo-sub">PREDICTOR OFICIAL</div>
+      </div>
+    </div>
+    <nav class="phase-nav" id="phaseNav">
+      <button class="nav-btn active" data-phase="groups">Fase de Grupos</button>
+      <button class="nav-btn" data-phase="r32" id="navR32" disabled>Ronda de 32</button>
+      <button class="nav-btn" data-phase="r16" id="navR16" disabled>Octavos</button>
+      <button class="nav-btn" data-phase="qf" id="navQF" disabled>Cuartos</button>
+      <button class="nav-btn" data-phase="sf" id="navSF" disabled>Semis</button>
+      <button class="nav-btn" data-phase="final" id="navFinal" disabled>Final</button>
+    </nav>
+    <button class="reset-btn" id="resetBtn">↺ Reiniciar</button>
+  </div>
+</header>
+
+<main id="app">
+  <!-- Fase de Grupos -->
+  <section id="phaseGroups" class="phase-section active">
+    <div class="phase-header">
+      <h1>Fase de Grupos</h1>
+      <p>Ingresa los resultados de los 48 equipos en 12 grupos. Los 2 primeros de cada grupo + los 8 mejores terceros avanzan.</p>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+        <span class="progress-label" id="progressLabel">0 / 72 partidos jugados</span>
+      </div>
+      <button class="cta-btn" id="advanceBtn" disabled>Calcular clasificados →</button>
+      <button class="cta-btn" id="predictBtn">Predecir CCon IA →</button>
+    </div>
+    <div class="groups-grid" id="groupsGrid"></div>
+  </section>
+
+  <!-- Ronda de 32 -->
+  <section id="phaseR32" class="phase-section">
+    <div class="phase-header">
+      <h1>Ronda de 32</h1>
+      <p>32 equipos clasificados. Elige el ganador de cada partido.</p>
+      <button class="cta-btn" id="advanceR32Btn" disabled>Avanzar a Octavos →</button>
+    </div>
+    <div class="bracket-grid" id="r32Grid"></div>
+  </section>
+
+  <!-- Octavos -->
+  <section id="phaseR16" class="phase-section">
+    <div class="phase-header">
+      <h1>Octavos de Final</h1>
+      <p>16 equipos. Elige el ganador de cada partido.</p>
+      <button class="cta-btn" id="advanceR16Btn" disabled>Avanzar a Cuartos →</button>
+    </div>
+    <div class="bracket-grid" id="r16Grid"></div>
+  </section>
+
+  <!-- Cuartos -->
+  <section id="phaseQF" class="phase-section">
+    <div class="phase-header">
+      <h1>Cuartos de Final</h1>
+      <p>8 equipos. Elige el ganador de cada partido.</p>
+      <button class="cta-btn" id="advanceQFBtn" disabled>Avanzar a Semifinales →</button>
+    </div>
+    <div class="bracket-grid" id="qfGrid"></div>
+  </section>
+
+  <!-- Semis -->
+  <section id="phaseSF" class="phase-section">
+    <div class="phase-header">
+      <h1>Semifinales</h1>
+      <p>4 equipos. Elige los finalistas.</p>
+      <button class="cta-btn" id="advanceSFBtn" disabled>Avanzar a la Final →</button>
+    </div>
+    <div class="bracket-grid" id="sfGrid"></div>
+  </section>
+
+  <!-- Final -->
+  <section id="phaseFinal" class="phase-section">
+    <div class="phase-header">
+      <h1>🏆 Gran Final</h1>
+      <p>El partido definitivo. ¿Quién será el campeón del mundo?</p>
+    </div>
+    <div class="final-container" id="finalContainer"></div>
+    <div class="champion-display" id="championDisplay"></div>
+  </section>
+</main>
+
+<!-- Modal terceros -->
+<div class="modal-overlay" id="thirdsModal">
+  <div class="modal-box">
+    <h2>🏅 Mejores Terceros Clasificados</h2>
+    <p>Según el reglamento FIFA 2026, los <strong>8 mejores terceros</strong> (de 12 grupos) clasifican a la Ronda de 32. Se seleccionan por: puntos → diferencia de goles → goles a favor → sorteo.</p>
+    <div id="thirdsContent"></div>
+    <button class="cta-btn" id="confirmThirds">Confirmar y ver el cuadro →</button>
+  </div>
+</div>
+
+<script src="logica.js"></script>
+<script src="LogicaIA.js"></script>
+<script src="fix_activatePhase.js"></script>
+
+
+</body>
+</html>
