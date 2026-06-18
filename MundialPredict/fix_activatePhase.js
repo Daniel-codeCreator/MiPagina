@@ -1,10 +1,3 @@
-// ── REEMPLAZA la función activatePhase en tu mundial2026.js ──────────────────
-// El problema: al navegar hacia atrás, se deshabilitaban los botones de fases
-// posteriores aunque ya estuvieran calculadas.
-// El fix: los botones se habilitan según hasta dónde se ha CALCULADO,
-// no según cuál fase está actualmente visible.
-// ─────────────────────────────────────────────────────────────────────────────
-
 function activatePhase(phase) {
   // Mostrar solo la sección correspondiente
   document.querySelectorAll('.phase-section').forEach(s => s.classList.remove('active'));

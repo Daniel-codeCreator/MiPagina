@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Futbol11 — Adivina el Jugador</title>
+<link rel="stylesheet" href="styles.css">
+
+
+</head>
+<body>
+
+<header>
+  <h1>Futbol<span>11</span></h1>
+  <p>Adivina el futbolista en 8 intentos</p>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="dot correct"></div> Correcto</div>
+  <div class="legend-item"><div class="dot close"></div> Cerca (edad/altura)</div>
+  <div class="legend-item"><div class="dot wrong"></div> Incorrecto</div>
+</div>
+
+<div class="search-wrap" id="search-wrap">
+  <input id="guess-input" type="text" placeholder="Escribe un nombre... (ej: mess)" autocomplete="off" spellcheck="false" />
+  <button id="guess-btn" title="Adivinar">➜</button>
+  <div id="suggestions"></div>
+</div>
+
+<p class="error-msg" id="error-msg"></p>
+<p class="tries-left" id="tries-left"></p>
+
+<div class="table-wrap">
+  <div class="grid-header">
+    <span>Jugador</span>
+    <span>Nac.</span>
+    <span>Club</span>
+    <span>Posición</span>
+    <span>Edad</span>
+    <span>Altura</span>
+  </div>
+  <div id="guesses"></div>
+</div>
+
+<div id="result-banner"></div>
+
+<script src="LogicaAdivinaJugador.js"></script>
+</body>
+</html>

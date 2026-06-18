@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Futbol11</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <h1>FUTBOL<span>11</span></h1>
+    <div id="equipoInfo" class="equipo-info"></div>
+    <div id="fallosDisplay" class="fallos-display"></div>
+  </header>
+
+  <main>
+    <div id="cancha">
+      <div class="slot dc"   data-pos="DC">DC</div>
+      <div class="slot ei"   data-pos="EI">EI</div>
+      <div class="slot ed"   data-pos="ED">ED</div>
+      <div class="slot mc1"  data-pos="MC">MC</div>
+      <div class="slot mc2"  data-pos="MC">MC</div>
+      <div class="slot mco"  data-pos="MCO">MCO</div>
+      <div class="slot mcd"  data-pos="MCD">MCD</div>
+      <div class="slot li"   data-pos="LI">LI</div>
+      <div class="slot ld"   data-pos="LD">LD</div>
+      <div class="slot dfc1" data-pos="DFC">DFC</div>
+      <div class="slot dfc2" data-pos="DFC">DFC</div>
+      <div class="slot por"  data-pos="POR">POR</div>
+    </div>
+
+    <div id="panel">
+      <p class="panel-hint">Adivina los <strong>11 jugadores</strong> del equipo.<br>Tienes 5 fallos antes de perder.</p>
+      <div class="search-wrap">
+        <input id="buscarJugador" type="text" placeholder="Escribe un jugador..." autocomplete="off" spellcheck="false" />
+        <button id="btnIntentar">→</button>
+        <div id="suggestions"></div>
+      </div>
+      <p id="mensaje" class="mensaje"></p>
+      <div id="progreso" class="progreso"></div>
+    </div>
+  </main>
+
+  <div id="modal-overlay" class="hidden">
+    <div id="modal">
+      <p id="modal-titulo"></p>
+      <div id="modal-botones"></div>
+      <button id="modal-cancelar">Cancelar</button>
+    </div>
+  </div>
+
+  <script src="equipos.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
