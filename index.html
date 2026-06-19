@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario Mundial - Menú Futbolero</title>
+    <style>
+        /* Estilos generales con temática de cancha de fútbol */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle, #1e5128 0%, #0f3014 100%);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        /* Contenedor principal (El Estadio) */
+        .menu-container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 2px solid #4e9f3d;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #d8f3dc;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #b7e4c7;
+            margin-bottom: 30px;
+        }
+
+        /* Contenedor de los botones */
+        .button-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Botones estilo pase de gol */
+        .btn-futbol {
+            display: block;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            background-color: #198754;
+            border: 2px solid #198754;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        /* Efecto al pasar el mouse (¡GOL!) */
+        .btn-futbol:hover {
+            background-color: #d8f3dc;
+            color: #1e5128;
+            border-color: #4e9f3d;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(78, 159, 61, 0.4);
+        }
+
+        /* Footer sutil */
+        .footer-text {
+            margin-top: 35px;
+            font-size: 0.85rem;
+            color: #74c69d;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu-container">
+        <h1>⚽ ¡Bienvenidos a la Página de Fútbol! ⚽</h1>
+        <p>Selecciona una opción del menú táctico para empezar a jugar:</p>
+        
+        <div class="button-list">
+            <a href="./AdivinaJugador/" class="btn-futbol">🧠 Adivina el Jugador</a>
+            <a href="./Futbol11/" class="btn-futbol">📋 Armar Fútbol 11</a>
+            <a href="./MundialPredict/" class="btn-futbol">🏆 Mundial Predict</a>
+        </div>
+
+        <div class="footer-text">
+            CALENDARIO MUNDIAL © 2026
+        </div>
+    </div>
+
+</body>
+</html>
