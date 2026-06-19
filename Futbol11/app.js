@@ -18,16 +18,56 @@ equipos.forEach(eq => {
 });
 
 // ── Elementos ────────────────────────────────────────────
-const buscador      = document.getElementById("buscarJugador");
-const sugBox        = document.getElementById("suggestions");
-const equipoInfoEl  = document.getElementById("equipoInfo");
-const fallosEl      = document.getElementById("fallosDisplay");
-const mensajeEl     = document.getElementById("mensaje");
-const progresoEl    = document.getElementById("progreso");
-const modalOverlay  = document.getElementById("modal-overlay");
-const modalTitulo   = document.getElementById("modal-titulo");
-const modalBotones  = document.getElementById("modal-botones");
-const modalCancelar = document.getElementById("modal-cancelar");
+const buscador          = document.getElementById("buscarJugador");
+const sugBox            = document.getElementById("suggestions");
+const equipoInfoEl      = document.getElementById("equipoInfo");
+const fallosEl          = document.getElementById("fallosDisplay");
+const mensajeEl         = document.getElementById("mensaje");
+const progresoEl        = document.getElementById("progreso");
+const modalOverlay      = document.getElementById("modal-overlay");
+const modalTitulo       = document.getElementById("modal-titulo");
+const modalBotones      = document.getElementById("modal-botones");
+const modalCancelar     = document.getElementById("modal-cancelar");
+const selectorFormacion = document.getElementById("selectorFormacion");
+
+// ── Mapeo de Formaciones Tácticas Universales ────────────
+const FORMACIONES = {
+  "4-3-3": [
+    { pos: "POR", cls: "p-por" },
+    { pos: "DFC", cls: "p-dfc-izq" }, { pos: "DFC", cls: "p-dfc-der" },
+    { pos: "LI",  cls: "p-li" },      { pos: "LD",  cls: "p-ld" },
+    { pos: "MCD", cls: "p-mcd" },
+    { pos: "MC",  cls: "p-mc-izq" },  { pos: "MC",  cls: "p-mc-der" },
+    { pos: "EI",  cls: "p-ei" },      { pos: "ED",  cls: "p-ed" },
+    { pos: "DC",  cls: "p-dc" }
+  ],
+  "4-2-3-1": [
+    { pos: "POR", cls: "p-por" },
+    { pos: "DFC", cls: "p-dfc-izq" }, { pos: "DFC", cls: "p-dfc-der" },
+    { pos: "LI",  cls: "p-li" },      { pos: "LD",  cls: "p-ld" },
+    { pos: "MCD", cls: "p-mcd-izq" }, { pos: "MCD", cls: "p-mcd-der" },
+    { pos: "MCO", cls: "p-mco" },
+    { pos: "EI",  cls: "p-ei" },      { pos: "ED",  cls: "p-ed" },
+    { pos: "DC",  cls: "p-dc" }
+  ],
+  "4-4-2": [
+    { pos: "POR", cls: "p-por" },
+    { pos: "DFC", cls: "p-dfc-izq" }, { pos: "DFC", cls: "p-dfc-der" },
+    { pos: "LI",  cls: "p-li" },      { pos: "LD",  cls: "p-ld" },
+    { pos: "MC",  cls: "p-mc-izq" },  { pos: "MC",  cls: "p-mc-der" },
+    { pos: "MI",  cls: "p-mi" },      { pos: "MD",  cls: "p-md" },
+    { pos: "DC",  cls: "p-dc-izq" },  { pos: "DC",  cls: "p-dc-der" }
+  ],
+  "4-1-2-1-3": [
+    { pos: "POR", cls: "p-por" },
+    { pos: "DFC", cls: "p-dfc-izq" }, { pos: "DFC", cls: "p-dfc-der" },
+    { pos: "LI",  cls: "p-li" },      { pos: "LD",  cls: "p-ld" },
+    { pos: "MCD", cls: "p-mcd" },
+    { pos: "MC",  cls: "p-mc-izq" },  { pos: "MC",  cls: "p-mc-der" },
+    { pos: "MCO", cls: "p-mco" },
+    { pos: "EI",  cls: "p-ei" },      { pos: "ED",  cls: "p-ed" }
+  ]
+};
 
 // ── Helpers ──────────────────────────────────────────────
 function norm(s) {
@@ -55,7 +95,6 @@ function highlightMatch(nombre, query) {
 
 // ── Cambiar equipo (sin tocar la cancha) ──────────────────
 function siguienteEquipo() {
-  // evitar repetir el mismo equipo
   const candidatos = equipos.filter(e => e !== equipoActual);
   equipoActual = candidatos[Math.floor(Math.random() * candidatos.length)];
 
@@ -71,17 +110,28 @@ function siguienteEquipo() {
   buscador.focus();
 }
 
-// ── Inicio de sesión ──────────────────────────────────────
+// ── Inicio de juego ──────────────────────────────────────
 function iniciarJuego() {
   fallos         = 0;
   totalColocados = 0;
   juegoTerminado = false;
   equipoActual   = null;
 
-  // limpiar cancha
-  document.querySelectorAll(".slot").forEach(s => {
-    s.classList.remove("ocupada");
-    s.innerHTML = s.dataset.pos;
+  // Redibujar la cancha dinámicamente según la formación elegida
+  const formacionElegida = selectorFormacion.value;
+  const mapaSlots = FORMACIONES[formacionElegida];
+  const slotsElementos = document.querySelectorAll(".slot");
+
+  slotsElementos.forEach((slot, index) => {
+    const config = mapaSlots[index];
+    
+    // Resetear las clases y remover nombres guardados
+    slot.className = `slot ${config.cls}`;
+    slot.removeAttribute("data-jugador");
+    
+    // Configurar texto y metadato original de posición
+    slot.dataset.pos = config.pos;
+    slot.innerHTML = config.pos;
   });
 
   buscador.value    = "";
@@ -103,6 +153,16 @@ function intentar(nombreForzado) {
   closeSuggestions();
 
   const nInput = norm(input);
+
+  // 1. Evitar Clones: Verificar si el jugador ya está pintado en la cancha
+  const yaExiste = [...document.querySelectorAll(".slot")].some(slot => {
+    return norm(slot.dataset.jugador || '') === nInput;
+  });
+
+  if (yaExiste) {
+    setMensaje(`⚠️ "${input}" ya está colocado en la cancha. ¡Busca a otro!`, "error");
+    return;
+  }
 
   // ¿Existe en el equipo actual?
   const jugador = equipoActual.jugadores.find(j => norm(j.nombre) === nInput);
@@ -127,9 +187,8 @@ function intentar(nombreForzado) {
   const posDisponibles = jugador.posiciones.filter(p => slotsLibresPara(p).length > 0);
 
   if (posDisponibles.length === 0) {
-    // no hay slot para esa posición, igual cambia equipo
-    setMensaje(`✅ ¡${jugador.nombre}! (sin slot libre para ${jugador.posiciones.join("/")}), cambiando equipo...`, "ok");
-    setTimeout(siguienteEquipo, 900);
+    // Parche Falso Acierto: Alertas y permites que se quede en el mismo equipo
+    setMensaje(`⚠️ ¡${jugador.nombre} es de este equipo, pero no quedan slots libres para (${jugador.posiciones.join("/")})! Prueba con otro jugador.`, "error");
     return;
   }
 
@@ -142,17 +201,20 @@ function intentar(nombreForzado) {
   }
 }
 
-// ── Colocar en slot (SIN borrar la cancha) ────────────────
+// ── Colocar en slot ───────────────────────────────────────
 function colocarEnSlot(jugador, slot, pos) {
   const partes = jugador.nombre.split(" ");
   const corto  = partes.length > 1
     ? partes[0].slice(0,1) + ". " + partes.slice(1).join(" ")
     : jugador.nombre;
 
+  // Guardamos el nombre completo sin recortes para la lógica de antiduplicados
+  slot.dataset.jugador = jugador.nombre; 
+
   slot.innerHTML = `<span class="nombre-slot">${corto}</span><span class="pos-slot">${pos}</span>`;
   slot.classList.add("ocupada");
   totalColocados++;
-  cerrarModal();
+  cerrarModal(false); // Cierra sin forzar cambio de equipo prematuro
   actualizarProgreso();
 
   // ¿Se completaron los 11?
@@ -184,14 +246,17 @@ function abrirModal(jugador, posDisponibles) {
   modalOverlay.classList.remove("hidden");
 }
 
-function cerrarModal() {
+function cerrarModal(debeCambiarEquipo = false) {
   modalOverlay.classList.add("hidden");
   jugadorPendiente = null;
   buscador.focus();
+  if (debeCambiarEquipo && !juegoTerminado) {
+    siguienteEquipo();
+  }
 }
 
-modalCancelar.addEventListener("click", cerrarModal);
-modalOverlay.addEventListener("click", e => { if (e.target === modalOverlay) cerrarModal(); });
+modalCancelar.addEventListener("click", () => cerrarModal(true));
+modalOverlay.addEventListener("click", e => { if (e.target === modalOverlay) cerrarModal(true); });
 
 // ── UI ────────────────────────────────────────────────────
 function actualizarFallos() {
@@ -254,8 +319,24 @@ buscador.addEventListener("keydown", e => {
   if (e.key === "Escape")     { closeSuggestions(); return; }
   if (e.key === "Enter") {
     e.preventDefault();
-    if (sugIdx >= 0 && items[sugIdx]) intentar(items[sugIdx].dataset.nombre);
-    else intentar();
+    
+    const itemActivo = sugBox.querySelector(".sug-item.active");
+    const primerItem = sugBox.querySelector(".sug-item");
+    
+    if (itemActivo) {
+      const nombreSeleccionado = itemActivo.dataset.nombre;
+      closeSuggestions();
+      intentar(nombreSeleccionado);
+    } else if (primerItem) {
+      // Parche de velocidad: Si hay sugerencias abiertas, autocompleta con la primera opción
+      const nombreAutocompletado = primerItem.dataset.nombre;
+      closeSuggestions();
+      intentar(nombreAutocompletado);
+    } else {
+      const textoManual = buscador.value;
+      closeSuggestions();
+      intentar(textoManual);
+    }
   }
 });
 
@@ -296,6 +377,9 @@ function closeSuggestions() {
 }
 
 document.getElementById("btnIntentar").addEventListener("click", () => intentar());
+
+// Listener para refrescar el juego inmediatamente si se cambia la formación táctica
+selectorFormacion.addEventListener("change", iniciarJuego);
 
 // ── Arrancar ──────────────────────────────────────────────
 iniciarJuego();

@@ -26,7 +26,7 @@ jugadores:[
 {nombre:"Courtois", posiciones:["POR"]},
 {nombre:"Rudiger", posiciones:["DFC"]},
 {nombre:"Militao", posiciones:["DFC"]},
-{nombre:"Carvajal", posiciones:["LD"]},
+{nombre:"Trent Alexander-Arnold", posiciones:["LD"]},
 {nombre:"Mendy", posiciones:["LI"]},
 {nombre:"Tchouameni", posiciones:["MCD","DFC"]},
 {nombre:"Valverde", posiciones:["MC","MD"]},
@@ -67,7 +67,7 @@ jugadores:[
 {nombre:"Rico Lewis", posiciones:["LD","MC"]},
 {nombre:"Rodri", posiciones:["MCD","MC"]},
 {nombre:"Reijnders", posiciones:["MC","MCO"]},
-{nombre:"Bernardo Silva", posiciones:["MC","MCO","ED"]},
+{nombre:"Omar Marmoush", posiciones:["ED","MCO","EI"]},
 {nombre:"Foden", posiciones:["MCO","EI","ED"]},
 {nombre:"Doku", posiciones:["EI","ED"]},
 {nombre:"Haaland", posiciones:["DC"]}
@@ -85,10 +85,10 @@ jugadores:[
 {nombre:"Upamecano", posiciones:["DFC"]},
 {nombre:"Kim Min Jae", posiciones:["DFC"]},
 {nombre:"Davies", posiciones:["LI","EI"]},
-{nombre:"Goretzka", posiciones:["MC","MCD"]},
+{nombre:"Luis Díaz", posiciones:["EI","DC", "MCO"]},
 {nombre:"Musiala", posiciones:["MCO","MC","EI"]},
 {nombre:"Olise", posiciones:["ED","MCO"]},
-{nombre:"Sané", posiciones:["ED","EI"]},
+{nombre:"Nicolas Jackson", posiciones:["DC"]},
 {nombre:"Harry Kane", posiciones:["DC"]}
 
 ]
@@ -107,8 +107,8 @@ jugadores:[
 {nombre:"Casemiro", posiciones:["MCD"]},
 {nombre:"Mainoo", posiciones:["MC","MCD"]},
 {nombre:"Bruno Fernandes", posiciones:["MCO","MC"]},
-{nombre:"Garnacho", posiciones:["EI","ED"]},
-{nombre:"Hojlund", posiciones:["DC"]}
+{nombre:"Mbeumo", posiciones:["DC","ED"]},
+{nombre:"Matheus Cunha", posiciones:["DC", "EI", "MCO"]}
 
 ]
 },
@@ -127,7 +127,7 @@ jugadores:[
 {nombre:"Thuram", posiciones:["MC","MCD"]},
 {nombre:"Koopmeiners", posiciones:["MC","MCO"]},
 {nombre:"Yildiz", posiciones:["EI","MCO","ED"]},
-{nombre:"Vlahovic", posiciones:["DC"]}
+{nombre:"Loïs Openda", posiciones:["DC"]}
 
 ]
 },
@@ -140,7 +140,7 @@ jugadores:[
 {nombre:"Alisson", posiciones:["POR"]},
 {nombre:"Van Dijk", posiciones:["DFC"]},
 {nombre:"Konaté", posiciones:["DFC"]},
-{nombre:"Alexander-Arnold", posiciones:["LD","MC"]},
+{nombre:"Kerkez", posiciones:["LD"]},
 {nombre:"Robertson", posiciones:["LI"]},
 {nombre:"Mac Allister", posiciones:["MC","MCD"]},
 {nombre:"Szoboszlai", posiciones:["MC","MCO"]},
@@ -184,7 +184,7 @@ jugadores:[
 {nombre:"Enzo Fernandez", posiciones:["MC","MCO"]},
 {nombre:"Cole Palmer", posiciones:["MCO","ED","EI"]},
 {nombre:"Neto", posiciones:["ED","EI"]},
-{nombre:"Nicolas Jackson", posiciones:["DC"]}
+{nombre:"Delap", posiciones:["DC"]}
 
 ]
 },

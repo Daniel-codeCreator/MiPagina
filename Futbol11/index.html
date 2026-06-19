@@ -16,36 +16,47 @@
 
   <main>
     <div id="cancha">
-      <div class="slot dc"   data-pos="DC">DC</div>
-      <div class="slot ei"   data-pos="EI">EI</div>
-      <div class="slot ed"   data-pos="ED">ED</div>
-      <div class="slot mc1"  data-pos="MC">MC</div>
-      <div class="slot mc2"  data-pos="MC">MC</div>
-      <div class="slot mco"  data-pos="MCO">MCO</div>
-      <div class="slot mcd"  data-pos="MCD">MCD</div>
-      <div class="slot li"   data-pos="LI">LI</div>
-      <div class="slot ld"   data-pos="LD">LD</div>
-      <div class="slot dfc1" data-pos="DFC">DFC</div>
-      <div class="slot dfc2" data-pos="DFC">DFC</div>
-      <div class="slot por"  data-pos="POR">POR</div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
     </div>
 
     <div id="panel">
+      <div class="formacion-selector-wrap">
+        <label for="selectorFormacion">Formación Táctica:</label>
+        <select id="selectorFormacion">
+          <option value="4-3-3">4-3-3 (Clásica)</option>
+          <option value="4-2-3-1">4-2-3-1 (Moderna)</option>
+          <option value="4-4-2">4-4-2 (Vieja Escuela)</option>
+          <option value="4-1-2-1-3">4-1-2-1-3 (Tu Rombo - 11 Jugadores)</option>
+        </select>
+      </div>
+
       <p class="panel-hint">Adivina los <strong>11 jugadores</strong> del equipo.<br>Tienes 5 fallos antes de perder.</p>
+      
       <div class="search-wrap">
         <input id="buscarJugador" type="text" placeholder="Escribe un jugador..." autocomplete="off" spellcheck="false" />
         <button id="btnIntentar">→</button>
         <div id="suggestions"></div>
       </div>
+      
       <p id="mensaje" class="mensaje"></p>
-      <div id="progreso" class="progreso"></div>
+      <div id="progreso" class="progreso">0 / 11 jugadores colocados</div>
     </div>
   </main>
 
-  <div id="modal-overlay" class="hidden">
-    <div id="modal">
-      <p id="modal-titulo"></p>
-      <div id="modal-botones"></div>
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3 id="modal-titulo">¿Dónde colocas al jugador?</h3>
+      <div id="modal-botones" class="modal-botones"></div>
       <button id="modal-cancelar">Cancelar</button>
     </div>
   </div>
