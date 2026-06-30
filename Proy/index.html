@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Cálculo</title>
+<style>
+:root{--bg:#0f0f0e;--surface:#1a1a18;--surface2:#242422;--border:#2e2e2b;--border2:#3a3a37;--text:#e8e6df;--muted:#888780;--accent:#378add;--accent-bg:#0c2a4a;--accent-border:#1a4a7a;--green:#1d9e75;--green-bg:#04342c;--amber:#ef9f27;--amber-bg:#412402;--red:#e24b4a;--radius:8px;--mono:'Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+.header{border-bottom:.5px solid var(--border);padding:1.25rem 2rem;display:flex;align-items:center;gap:12px}
+.header-icon{width:32px;height:32px;background:var(--accent-bg);border:.5px solid var(--accent-border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.header h1{font-size:16px;font-weight:500}.header p{font-size:12px;color:var(--muted);margin-top:1px}
+.layout{display:flex;min-height:calc(100vh - 65px)}
+.sidebar{width:200px;border-right:.5px solid var(--border);padding:1rem;display:flex;flex-direction:column;gap:2px;flex-shrink:0}
+.nav-btn{width:100%;text-align:left;padding:8px 12px;border-radius:var(--radius);border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;font-family:inherit;transition:all .12s;display:flex;align-items:center;gap:8px}
+.nav-btn:hover{background:var(--surface);color:var(--text)}
+.nav-btn.active{background:var(--accent-bg);color:var(--accent);border:.5px solid var(--accent-border)}
+.main{flex:1;padding:1.75rem 2rem;overflow-y:auto}
+.panel{display:none}.panel.active{display:block}
+.panel-title{font-size:18px;font-weight:500;margin-bottom:.25rem}
+.panel-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:.75rem}
+.field label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select{padding:8px 12px;background:var(--surface);border:.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-size:14px;font-family:inherit;transition:border-color .12s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent)}
+.field select option{background:var(--surface2)}
+.btn{padding:9px 20px;background:var(--accent-bg);color:var(--accent);border:.5px solid var(--accent-border);border-radius:var(--radius);cursor:pointer;font-size:14px;font-weight:500;font-family:inherit;transition:all .12s;margin-top:.5rem}
+.btn:hover{background:#163d6a}
+.result-area{margin-top:1.5rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.result-card{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem}
+.result-card-title{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:.5px solid var(--border);font-size:13px}
+.result-row:last-child{border-bottom:none}
+.result-label{color:var(--muted)}
+.result-val{font-family:var(--mono);font-size:13px;color:var(--text)}
+.result-val.accent{color:var(--accent);font-weight:500}
+.result-val.green{color:var(--green)}
+.steps-box{background:var(--surface2);border:.5px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:1rem}
+.step-line{font-size:12px;color:var(--muted);padding:2px 0}
+.chart-wrapper{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:1rem;margin-top:1.5rem}
+.chart-title{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
+.chart-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.75rem}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.legend-line{width:22px;height:3px;border-radius:2px}
+.hidden{display:none}
+.trig-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem}
+.circle-card{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:1rem;display:flex;flex-direction:column;align-items:center}
+@media(max-width:700px){.sidebar{width:52px}.nav-btn span:not(.nav-icon){display:none}.main{padding:1rem}.grid2,.grid3,.result-grid,.trig-layout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-icon">&#8747;</div>
+  <div><h1>Pre-C&#225;lculo</h1><p>Calculadora interactiva con gr&#225;ficas</p></div>
+</div>
+<div class="layout">
+  <nav class="sidebar">
+    <button class="nav-btn active" onclick="switchPanel('funciones',this)"><span class="nav-icon">f</span><span>Funciones</span></button>
+    <button class="nav-btn" onclick="switchPanel('cuadratica',this)"><span class="nav-icon">x&#178;</span><span>Cuadr&#225;ticas</span></button>
+    <button class="nav-btn" onclick="switchPanel('log',this)"><span class="nav-icon">&#x33D2;</span><span>Log / Exp</span></button>
+    <button class="nav-btn" onclick="switchPanel('trig',this)"><span class="nav-icon">sin</span><span>Trigonometr&#237;a</span></button>
+    <button class="nav-btn" onclick="switchPanel('sistemas',this)"><span class="nav-icon">=</span><span>Sistemas</span></button>
+    <button class="nav-btn" onclick="switchPanel('progresiones',this)"><span class="nav-icon">&#8721;</span><span>Progresiones</span></button>
+  </nav>
+  <main class="main">
+
+    <div id="panel-funciones" class="panel active">
+      <p class="panel-title">Funciones</p>
+      <p class="panel-sub">Evaluaci&#243;n y composici&#243;n f(x) &middot; g(x) &middot; f&#8728;g &middot; g&#8728;f</p>
+      <div class="grid2">
+        <div class="field"><label>f(x) =</label><input id="fx" value="x^2 - 2*x - 3"></div>
+        <div class="field"><label>g(x) =</label><input id="gx" value="2*x + 1"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Rango desde</label><input id="f-xmin" type="number" value="-5"></div>
+        <div class="field"><label>Rango hasta</label><input id="f-xmax" type="number" value="5"></div>
+        <div class="field"><label>Valor de x</label><input id="xval" type="number" value="2"></div>
+      </div>
+      <button class="btn" onclick="calcFunciones()">Calcular y graficar</button>
+      <div id="res-funciones" class="hidden"><div class="result-area">
+        <div class="steps-box" id="steps-funciones"></div>
+        <div class="result-grid">
+          <div class="result-card"><p class="result-card-title">Valores en x</p><div id="vals-funciones"></div></div>
+          <div class="result-card"><p class="result-card-title">Composici&#243;n</p><div id="comp-funciones"></div></div>
+        </div>
+        <div class="chart-wrapper"><p class="chart-title">Plano cartesiano</p><div class="chart-legend" id="legend-funciones"></div><canvas id="chart-funciones"></canvas></div>
+      </div></div>
+    </div>
+
+    <div id="panel-cuadratica" class="panel">
+      <p class="panel-title">Ecuaci&#243;n cuadr&#225;tica</p>
+      <p class="panel-sub">ax&#178; + bx + c = 0 &middot; F&#243;rmula general y par&#225;bola</p>
+      <div class="grid3">
+        <div class="field"><label>a</label><input id="qa" type="number" value="1"></div>
+        <div class="field"><label>b</label><input id="qb" type="number" value="-5"></div>
+        <div class="field"><label>c</label><input id="qc" type="number" value="6"></div>
+      </div>
+      <button class="btn" onclick="calcCuadratica()">Resolver y graficar</button>
+      <div id="res-cuadratica" class="hidden"><div class="result-area">
+        <div class="steps-box" id="steps-cuadratica"></div>
+        <div class="result-grid">
+          <div class="result-card" id="vals-cuadratica"></div>
+          <div class="result-card"><p class="result-card-title">Datos</p><div id="info-cuadratica"></div></div>
+        </div>
+        <div class="chart-wrapper"><p class="chart-title">Par&#225;bola</p><div class="chart-legend" id="legend-cuadratica"></div><canvas id="chart-cuadratica"></canvas></div>
+      </div></div>
+    </div>
+
+    <div id="panel-log" class="panel">
+      <p class="panel-title">Logaritmos y exponenciales</p>
+      <p class="panel-sub">C&#225;lculo y gr&#225;fica en plano cartesiano</p>
+      <div class="grid3">
+        <div class="field"><label>Operaci&#243;n</label>
+          <select id="log-op"><option value="log">log_b(x)</option><option value="ln">ln(x)</option><option value="exp">b^x</option><option value="ambas">log vs b^x</option></select></div>
+        <div class="field"><label>Base (b)</label><input id="log-base" type="number" value="10" step="0.1"></div>
+        <div class="field"><label>Valor de x</label><input id="log-x" type="number" value="100"></div>
+      </div>
+      <button class="btn" onclick="calcLog()">Calcular y graficar</button>
+      <div id="res-log" class="hidden"><div class="result-area">
+        <div class="steps-box" id="steps-log"></div>
+        <div class="result-card" style="margin-bottom:1.5rem"><div id="vals-log"></div></div>
+        <div class="chart-wrapper"><p class="chart-title" id="log-chart-title">Gr&#225;fica</p><div class="chart-legend" id="legend-log"></div><canvas id="chart-log"></canvas></div>
+      </div></div>
+    </div>
+
+    <div id="panel-trig" class="panel">
+      <p class="panel-title">Trigonometr&#237;a</p>
+      <p class="panel-sub">Funciones trigonom&#233;tricas y c&#237;rculo unitario</p>
+      <div class="grid3">
+        <div class="field"><label>Unidad</label><select id="trig-unit"><option value="deg">Grados (&#176;)</option><option value="rad">Radianes</option></select></div>
+        <div class="field"><label>&#193;ngulo</label><input id="trig-angle" type="number" value="45"></div>
+        <div class="field"><label>Mostrar</label><select id="trig-fn"><option value="all">sen, cos, tan</option><option value="sin">Seno</option><option value="cos">Coseno</option><option value="tan">Tangente</option></select></div>
+      </div>
+      <button class="btn" onclick="calcTrig()">Calcular y graficar</button>
+      <div id="res-trig" class="hidden">
+        <div class="trig-layout">
+          <div class="circle-card"><p class="result-card-title" style="align-self:flex-start">C&#237;rculo unitario</p><canvas id="trig-circle" width="240" height="240"></canvas></div>
+          <div class="result-card"><p class="result-card-title">Valores</p><div id="vals-trig"></div></div>
+        </div>
+        <div class="chart-wrapper" style="margin-top:1.5rem"><p class="chart-title">Gr&#225;fica en [&minus;2&pi;, 2&pi;]</p><div class="chart-legend" id="legend-trig"></div><canvas id="chart-trig"></canvas></div>
+      </div>
+    </div>
+
+    <div id="panel-sistemas" class="panel">
+      <p class="panel-title">Sistema de ecuaciones lineales</p>
+      <p class="panel-sub">2&times;2 &middot; Regla de Cramer &middot; Gr&#225;fica de rectas</p>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">a&#8321;x + b&#8321;y = c&#8321; &nbsp;|&nbsp; a&#8322;x + b&#8322;y = c&#8322;</p>
+      <div class="grid3" style="margin-bottom:4px">
+        <div class="field"><label>a&#8321;</label><input id="s_a1" type="number" value="2"></div>
+        <div class="field"><label>b&#8321;</label><input id="s_b1" type="number" value="3"></div>
+        <div class="field"><label>c&#8321;</label><input id="s_c1" type="number" value="7"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>a&#8322;</label><input id="s_a2" type="number" value="1"></div>
+        <div class="field"><label>b&#8322;</label><input id="s_b2" type="number" value="-1"></div>
+        <div class="field"><label>c&#8322;</label><input id="s_c2" type="number" value="0"></div>
+      </div>
+      <button class="btn" onclick="calcSistema()">Resolver y graficar</button>
+      <div id="res-sistema" class="hidden"><div class="result-area">
+        <div class="steps-box" id="steps-sistema"></div>
+        <div class="result-card" style="margin-bottom:1.5rem"><div id="vals-sistema"></div></div>
+        <div class="chart-wrapper"><p class="chart-title">Rectas del sistema</p><div class="chart-legend" id="legend-sistema"></div><canvas id="chart-sistema"></canvas></div>
+      </div></div>
+    </div>
+
+    <div id="panel-progresiones" class="panel">
+      <p class="panel-title">Progresiones</p>
+      <p class="panel-sub">Aritm&#233;tica y geom&#233;trica &middot; T&#233;rminos &middot; Suma acumulada</p>
+      <div class="grid2">
+        <div class="field"><label>Tipo</label><select id="prog-tipo"><option value="aritmetica">Aritm&#233;tica (diferencia d)</option><option value="geometrica">Geom&#233;trica (raz&#243;n r)</option></select></div>
+        <div class="field"><label>Primer t&#233;rmino (a&#8321;)</label><input id="prog-a1" type="number" value="2"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Diferencia / Raz&#243;n</label><input id="prog-r" type="number" value="3"></div>
+        <div class="field"><label>N&#250;mero de t&#233;rminos (n)</label><input id="prog-n" type="number" value="10" min="2" max="30"></div>
+      </div>
+      <button class="btn" onclick="calcProgresion()">Calcular y graficar</button>
+      <div id="res-progresion" class="hidden"><div class="result-area">
+        <div class="steps-box" id="steps-prog"></div>
+        <div class="result-grid">
+          <div class="result-card"><div id="vals-prog"></div></div>
+          <div class="result-card"><p class="result-card-title">T&#233;rminos</p><div id="terms-prog" style="font-family:var(--mono);font-size:12px;color:var(--muted);line-height:2"></div></div>
+        </div>
+        <div class="chart-wrapper"><p class="chart-title">Visualizaci&#243;n</p><div class="chart-legend" id="legend-prog"></div><canvas id="chart-prog"></canvas></div>
+      </div></div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function switchPanel(id,btn){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');btn.classList.add('active');}
+function fmt(n,d=4){if(isNaN(n)||!isFinite(n))return'--';return parseFloat(n.toFixed(d)).toString();}
+function evalExpr(expr,x){let e=expr.replace(/\^/g,'**').replace(/x/g,'('+x+')');try{return Function('"use strict";return ('+e+')')();}catch{return NaN;}}
+function rng(min,max,steps=300){const arr=[],step=(max-min)/steps;for(let i=0;i<=steps;i++)arr.push(min+i*step);return arr;}
+function makeRow(l,v,cls=''){return`<div class="result-row"><span class="result-label">${l}</span><span class="result-val ${cls}">${v}</span></div>`;}
+function makeSteps(s){return s.map(x=>`<div class="step-line">${x}</div>`).join('');}
+function makeLegend(id,items){document.getElementById(id).innerHTML=items.map(([l,c])=>`<div class="legend-item"><div class="legend-line" style="background:${c}"></div>${l}</div>`).join('');}
+
+// ── PLANO CARTESIANO CLASICO ──
+function drawCartesian(canvasId,curves,opts){
+  opts=opts||{};
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.parentElement.clientWidth-32||600;
+  const H=opts.height||Math.round(W*0.60);
+  canvas.width=W*dpr;canvas.height=H*dpr;
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  const BG='#141412',GRID='#242422',AXCOL='#b0ae a4',TICKCOL='#555451',TXTCOL='#888780';
+  const AXCOLOR='#aaa89e';
+  const ML=44,MR=20,MT=20,MB=36;
+  const PW=W-ML-MR,PH=H-MT-MB;
+
+  // Auto rangos
+  let allX=[],allY=[];
+  curves.forEach(c=>{
+    if(c.points)c.points.forEach(p=>{if(isFinite(p.x))allX.push(p.x);if(isFinite(p.y))allY.push(p.y);});
+    if(c.bars)c.bars.forEach((v,i)=>{allX.push(i);if(isFinite(v))allY.push(v);});
+    if(c.dots)c.dots.forEach(p=>{if(isFinite(p.x))allX.push(p.x);if(isFinite(p.y))allY.push(p.y);});
+  });
+  let xMin=opts.xMin!==undefined?opts.xMin:(allX.length?Math.min(...allX):-6);
+  let xMax=opts.xMax!==undefined?opts.xMax:(allX.length?Math.max(...allX):6);
+  let yMin=opts.yMin!==undefined?opts.yMin:(allY.length?Math.min(...allY):-6);
+  let yMax=opts.yMax!==undefined?opts.yMax:(allY.length?Math.max(...allY):6);
+
+  const xPad=(xMax-xMin)*0.10,yPad=(yMax-yMin)*0.15;
+  if(opts.xMin===undefined){xMin-=xPad;xMax+=xPad;}
+  if(opts.yMin===undefined){yMin-=yPad;yMax+=yPad;}
+  if(xMax===xMin){xMin-=1;xMax+=1;}
+  if(yMax===yMin){yMin-=1;yMax+=1;}
+
+  function toP(x,y){return[ML+((x-xMin)/(xMax-xMin))*PW, MT+((yMax-y)/(yMax-yMin))*PH];}
+
+  function niceStep(r){const rough=r/10;const pow=Math.pow(10,Math.floor(Math.log10(Math.abs(rough)||1)));const nice=[1,2,5,10];return(nice.find(n=>n*pow>=rough)||nice[0])*pow;}
+  const xStep=niceStep(xMax-xMin);
+  const yStep=niceStep(yMax-yMin);
+
+  ctx.fillStyle=BG;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#0d0d0c';ctx.fillRect(ML,MT,PW,PH);
+
+  // Grid lines
+  ctx.strokeStyle=GRID;ctx.lineWidth=0.5;
+  let xg=Math.ceil(xMin/xStep)*xStep;
+  while(xg<=xMax+xStep*0.01){const[px]=toP(xg,0);ctx.beginPath();ctx.moveTo(px,MT);ctx.lineTo(px,MT+PH);ctx.stroke();xg=Math.round((xg+xStep)*1e9)/1e9;}
+  let yg=Math.ceil(yMin/yStep)*yStep;
+  while(yg<=yMax+yStep*0.01){const[,py]=toP(0,yg);ctx.beginPath();ctx.moveTo(ML,py);ctx.lineTo(ML+PW,py);ctx.stroke();yg=Math.round((yg+yStep)*1e9)/1e9;}
+
+  // Ejes
+  const[ox,oy]=toP(0,0);
+  const axX=Math.max(ML,Math.min(ox,ML+PW));
+  const axY=Math.max(MT,Math.min(oy,MT+PH));
+
+  function arrow(ctx,x1,y1,x2,y2,aw,ah){
+    const dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
+    const ux=dx/len,uy=dy/len;
+    ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-ux*aw-uy*ah,y2-uy*aw+ux*ah);ctx.lineTo(x2-ux*aw+uy*ah,y2-uy*aw-ux*ah);ctx.closePath();ctx.fill();
+  }
+
+  ctx.strokeStyle=AXCOLOR;ctx.fillStyle=AXCOLOR;ctx.lineWidth=1.5;
+  // Eje X
+  ctx.beginPath();ctx.moveTo(ML,axY);ctx.lineTo(ML+PW,axY);ctx.stroke();
+  arrow(ctx,ML,axY,ML+PW+1,axY,9,4);
+  arrow(ctx,ML+PW,axY,ML-1,axY,9,4);
+  // Eje Y
+  ctx.beginPath();ctx.moveTo(axX,MT+PH);ctx.lineTo(axX,MT);ctx.stroke();
+  arrow(ctx,axX,MT+PH,axX,MT-1,9,4);
+  arrow(ctx,axX,MT,axX,MT+PH+1,9,4);
+
+  // Etiquetas eje X
+  ctx.font='11px sans-serif';ctx.fillStyle=TXTCOL;ctx.textAlign='center';
+  ctx.strokeStyle=TICKCOL;ctx.lineWidth=0.8;
+  xg=Math.ceil(xMin/xStep)*xStep;
+  while(xg<=xMax+xStep*0.01){
+    if(Math.abs(xg)>xStep*0.05){
+      const[px]=toP(xg,0);
+      ctx.beginPath();ctx.moveTo(px,axY-3);ctx.lineTo(px,axY+3);ctx.stroke();
+      const lbl=Number.isInteger(xg)?xg.toString():fmt(xg,1);
+      ctx.fillText(lbl,px,axY+15);
+    }
+    xg=Math.round((xg+xStep)*1e9)/1e9;
+  }
+  ctx.font='italic 13px serif';ctx.fillStyle=AXCOLOR;ctx.textAlign='left';
+  ctx.fillText('x',ML+PW+6,axY+5);
+
+  // Etiquetas eje Y
+  ctx.font='11px sans-serif';ctx.fillStyle=TXTCOL;ctx.textAlign='right';
+  ctx.strokeStyle=TICKCOL;ctx.lineWidth=0.8;
+  yg=Math.ceil(yMin/yStep)*yStep;
+  while(yg<=yMax+yStep*0.01){
+    if(Math.abs(yg)>yStep*0.05){
+      const[,py]=toP(0,yg);
+      ctx.beginPath();ctx.moveTo(axX-3,py);ctx.lineTo(axX+3,py);ctx.stroke();
+      const lbl=Number.isInteger(yg)?yg.toString():fmt(yg,1);
+      ctx.fillText(lbl,axX-7,py+4);
+    }
+    yg=Math.round((yg+yStep)*1e9)/1e9;
+  }
+  ctx.font='italic 13px serif';ctx.fillStyle=AXCOLOR;ctx.textAlign='center';
+  ctx.fillText('y',axX,MT-6);
+
+  // Origen
+  ctx.font='11px sans-serif';ctx.fillStyle=TXTCOL;ctx.textAlign='right';
+  ctx.fillText('0',axX-6,axY+14);
+
+  // ── Dibujar curvas ──
+  curves.forEach(curve=>{
+    if(curve.points&&curve.points.length>1){
+      ctx.save();
+      ctx.beginPath();ctx.rect(ML,MT,PW,PH);ctx.clip();
+      ctx.strokeStyle=curve.color||'#378add';ctx.lineWidth=curve.width||2;ctx.lineJoin='round';
+      ctx.beginPath();
+      let started=false,prevOk=false;
+      curve.points.forEach(p=>{
+        const ok=isFinite(p.x)&&isFinite(p.y)&&p.y>yMin*3&&p.y<yMax*3;
+        if(ok){const[px,py]=toP(p.x,p.y);if(!started||!prevOk){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);}
+        prevOk=ok;
+      });
+      ctx.stroke();ctx.restore();
+    }
+    if(curve.bars){
+      ctx.save();ctx.beginPath();ctx.rect(ML,MT,PW,PH);ctx.clip();
+      const n=curve.bars.length;
+      const bw=Math.max(3,PW/n*0.55);
+      const[,py0]=toP(0,0);
+      curve.bars.forEach((val,i)=>{
+        if(!isFinite(val))return;
+        const[px]=toP(i,0);const[,py1]=toP(0,val);
+        const bx=px-bw/2,by=Math.min(py0,py1),bh=Math.abs(py0-py1);
+        ctx.fillStyle=curve.color+'44';ctx.fillRect(bx,by,bw,bh);
+        ctx.strokeStyle=curve.color;ctx.lineWidth=1.5;ctx.strokeRect(bx,by,bw,bh);
+      });
+      ctx.restore();
+    }
+    if(curve.dots){
+      curve.dots.forEach(p=>{
+        if(!isFinite(p.x)||!isFinite(p.y))return;
+        const[px,py]=toP(p.x,p.y);
+        ctx.fillStyle=curve.color||'#ef9f27';ctx.strokeStyle='#0f0f0e';ctx.lineWidth=2.5;
+        ctx.beginPath();ctx.arc(px,py,6,0,Math.PI*2);ctx.fill();ctx.stroke();
+        if(p.label){ctx.font='11px sans-serif';ctx.fillStyle=curve.color;ctx.textAlign='left';ctx.fillText(p.label,px+9,py-6);}
+      });
+    }
+  });
+}
+
+// ── FUNCIONES ──
+function calcFunciones(){
+  const fx=document.getElementById('fx').value;
+  const gx=document.getElementById('gx').value;
+  const x0=parseFloat(document.getElementById('xval').value);
+  const xMin=parseFloat(document.getElementById('f-xmin').value);
+  const xMax=parseFloat(document.getElementById('f-xmax').value);
+  const fv=evalExpr(fx,x0),gv=evalExpr(gx,x0);
+  const fog=evalExpr(fx,gv),gof=evalExpr(gx,fv);
+  document.getElementById('steps-funciones').innerHTML=makeSteps([`f(x) = ${fx}`,`g(x) = ${gx}`,`f(${x0}) = ${fmt(fv)}`,`g(${x0}) = ${fmt(gv)}`,`(f\u2218g)(${x0}) = f(g(${x0})) = ${fmt(fog)}`,`(g\u2218f)(${x0}) = g(f(${x0})) = ${fmt(gof)}`]);
+  document.getElementById('vals-funciones').innerHTML=makeRow(`f(${x0})`,fmt(fv))+makeRow(`g(${x0})`,fmt(gv));
+  document.getElementById('comp-funciones').innerHTML=makeRow('(f\u2218g)(x)',fmt(fog),'accent')+makeRow('(g\u2218f)(x)',fmt(gof),'green');
+  document.getElementById('res-funciones').classList.remove('hidden');
+  makeLegend('legend-funciones',[['f(x)','#378add'],['g(x)','#1d9e75'],['Punto x='+x0,'#ef9f27']]);
+  const xs=rng(xMin,xMax);
+  setTimeout(()=>drawCartesian('chart-funciones',[
+    {points:xs.map(x=>({x,y:evalExpr(fx,x)})),color:'#378add',width:2.5},
+    {points:xs.map(x=>({x,y:evalExpr(gx,x)})),color:'#1d9e75',width:2.5},
+    {dots:[{x:x0,y:fv,label:'f('+x0+')='+fmt(fv)},{x:x0,y:gv,label:'g('+x0+')='+fmt(gv)}],color:'#ef9f27'}
+  ],{xMin,xMax}),10);
+}
+
+// ── CUADRATICA ──
+function calcCuadratica(){
+  const a=parseFloat(document.getElementById('qa').value);
+  const b=parseFloat(document.getElementById('qb').value);
+  const c=parseFloat(document.getElementById('qc').value);
+  const disc=b*b-4*a*c;
+  const vx=-b/(2*a),vy=a*vx*vx+b*vx+c;
+  const steps=[`${fmt(a)}x\u00b2 + (${fmt(b)})x + (${fmt(c)}) = 0`,`\u0394 = b\u00b2\u22124ac = ${fmt(disc)}`];
+  let valsHTML='<p class="result-card-title">Ra\u00edces</p>',infoHTML='',rootDots=[];
+  if(disc>0){
+    const x1=(-b+Math.sqrt(disc))/(2*a),x2=(-b-Math.sqrt(disc))/(2*a);
+    steps.push(`\u0394 > 0 \u2192 dos ra\u00edces reales`);
+    valsHTML+=makeRow('\u0394',fmt(disc),'green')+makeRow('x\u2081',fmt(x1),'accent')+makeRow('x\u2082',fmt(x2),'accent');
+    rootDots=[{x:x1,y:0,label:'x\u2081='+fmt(x1)},{x:x2,y:0,label:'x\u2082='+fmt(x2)}];
+  }else if(Math.abs(disc)<1e-10){
+    steps.push(`\u0394 = 0 \u2192 ra\u00edz doble`);
+    valsHTML+=makeRow('\u0394','0')+makeRow('x (doble)',fmt(vx),'accent');
+    rootDots=[{x:vx,y:0,label:'x='+fmt(vx)}];
+  }else{
+    const re=vx,im=Math.sqrt(-disc)/(2*a);
+    steps.push(`\u0394 < 0 \u2192 ra\u00edces complejas`);
+    valsHTML+=makeRow('\u0394',fmt(disc))+makeRow('x\u2081',fmt(re)+' + '+fmt(im)+'i')+makeRow('x\u2082',fmt(re)+' \u2212 '+fmt(im)+'i');
+  }
+  infoHTML=makeRow('V\u00e9rtice','('+fmt(vx)+', '+fmt(vy)+')')+makeRow('Abre hacia',a>0?'arriba \u2191':'abajo \u2193');
+  document.getElementById('steps-cuadratica').innerHTML=makeSteps(steps);
+  document.getElementById('vals-cuadratica').innerHTML=valsHTML;
+  document.getElementById('info-cuadratica').innerHTML=infoHTML;
+  document.getElementById('res-cuadratica').classList.remove('hidden');
+  makeLegend('legend-cuadratica',[['Par\u00e1bola','#378add'],['Ra\u00edces','#e24b4a'],['V\u00e9rtice','#ef9f27']]);
+  const span=Math.max(8,Math.abs(vx)*2.5+4);
+  const xs=rng(vx-span,vx+span,300);
+  setTimeout(()=>drawCartesian('chart-cuadratica',[
+    {points:xs.map(x=>({x,y:a*x*x+b*x+c})),color:'#378add',width:2.5},
+    {dots:rootDots,color:'#e24b4a'},
+    {dots:[{x:vx,y:vy,label:'V('+fmt(vx)+','+fmt(vy)+')'}],color:'#ef9f27'}
+  ]),10);
+}
+
+// ── LOGARITMOS ──
+function calcLog(){
+  const op=document.getElementById('log-op').value;
+  const b=parseFloat(document.getElementById('log-base').value);
+  const x=parseFloat(document.getElementById('log-x').value);
+  let steps=[],rows=[],curves=[],chartTitle='',legendItems=[];
+  if(op==='log'){
+    const r=Math.log(x)/Math.log(b);
+    steps=[`log_${fmt(b)}(${fmt(x)}) = ln(x)/ln(b) = ${fmt(r,6)}`];
+    rows=[['Base b',fmt(b)],['x',fmt(x)],['log_b(x)',fmt(r,6)]];
+    const xs=rng(0.05,Math.max(x*2,20));
+    curves=[{points:xs.map(v=>({x:v,y:Math.log(v)/Math.log(b)})),color:'#378add',width:2.5}];
+    legendItems=[['log_'+fmt(b)+'(x)','#378add']];chartTitle='log_'+fmt(b)+'(x)';
+  }else if(op==='ln'){
+    steps=[`ln(${fmt(x)}) = ${fmt(Math.log(x),6)}`];
+    rows=[['x',fmt(x)],['ln(x)',fmt(Math.log(x),6)],['log\u2081\u2080(x)',fmt(Math.log10(x),6)]];
+    const xs=rng(0.05,Math.max(x*2,20));
+    curves=[{points:xs.map(v=>({x:v,y:Math.log(v)})),color:'#378add',width:2.5},{points:xs.map(v=>({x:v,y:Math.log10(v)})),color:'#1d9e75',width:2.5}];
+    legendItems=[['ln(x)','#378add'],['log\u2081\u2080(x)','#1d9e75']];chartTitle='ln(x) vs log\u2081\u2080(x)';
+  }else if(op==='exp'){
+    const r=Math.pow(b,x);
+    steps=[`${fmt(b)}^${fmt(x)} = ${fmt(r,6)}`];
+    rows=[['Base b',fmt(b)],['Exponente x',fmt(x)],['b^x',fmt(r,6)]];
+    const xs=rng(-4,Math.min(x*1.5+2,8));
+    curves=[{points:xs.map(v=>({x:v,y:Math.pow(b,v)})),color:'#378add',width:2.5}];
+    legendItems=[[''+fmt(b)+'^x','#378add']];chartTitle=fmt(b)+'^x';
+  }else{
+    const r=Math.log(x)/Math.log(b);
+    steps=[`log_${fmt(b)}(${fmt(x)}) = ${fmt(r,6)}`,`Funciones inversas (sim\u00e9tricas en y=x)`];
+    rows=[['log_b(x)',fmt(r,6)],[fmt(b)+'^x en x='+fmt(x),fmt(Math.pow(b,x),6)]];
+    const xs1=rng(0.05,12),xs2=rng(-3,4),xs3=rng(-3,12);
+    curves=[
+      {points:xs1.map(v=>({x:v,y:Math.log(v)/Math.log(b)})),color:'#378add',width:2.5},
+      {points:xs2.map(v=>({x:v,y:Math.pow(b,v)})),color:'#1d9e75',width:2.5},
+      {points:xs3.map(v=>({x:v,y:v})),color:'#555451',width:1}
+    ];
+    legendItems=[['log_b(x)','#378add'],['b^x','#1d9e75'],['y = x','#555451']];chartTitle='log_b(x) vs b^x';
+  }
+  document.getElementById('steps-log').innerHTML=makeSteps(steps);
+  document.getElementById('vals-log').innerHTML=rows.map(([l,v],i)=>makeRow(l,v,i===rows.length-1?'accent':'')).join('');
+  document.getElementById('log-chart-title').textContent=chartTitle;
+  document.getElementById('res-log').classList.remove('hidden');
+  makeLegend('legend-log',legendItems);
+  setTimeout(()=>drawCartesian('chart-log',curves),10);
+}
+
+// ── TRIG ──
+function calcTrig(){
+  const unit=document.getElementById('trig-unit').value;
+  const angleRaw=parseFloat(document.getElementById('trig-angle').value);
+  const fn=document.getElementById('trig-fn').value;
+  const rad=unit==='deg'?angleRaw*Math.PI/180:angleRaw;
+  const deg=unit==='deg'?angleRaw:angleRaw*180/Math.PI;
+  const s=Math.sin(rad),co=Math.cos(rad),t=Math.tan(rad);
+  document.getElementById('vals-trig').innerHTML=
+    makeRow('Grados',fmt(deg,2)+'\u00b0')+makeRow('Radianes',fmt(rad,4))+
+    makeRow('sen(\u03b8)',fmt(s,6),'accent')+makeRow('cos(\u03b8)',fmt(co,6),'green')+
+    makeRow('tan(\u03b8)',isFinite(t)?fmt(t,6):'Indefinido')+
+    makeRow('csc(\u03b8)',isFinite(1/s)?fmt(1/s,6):'Indefinido')+
+    makeRow('sec(\u03b8)',isFinite(1/co)?fmt(1/co,6):'Indefinido')+
+    makeRow('cot(\u03b8)',isFinite(co/s)?fmt(co/s,6):'Indefinido')+
+    makeRow('sen\u00b2+cos\u00b2',fmt(s*s+co*co,8));
+  document.getElementById('res-trig').classList.remove('hidden');
+  drawTrigCircle(rad,s,co);
+  const xs=rng(-2*Math.PI,2*Math.PI,500);
+  const curves=[],legendItems=[];
+  if(fn==='sin'||fn==='all'){curves.push({points:xs.map(x=>({x,y:Math.sin(x)})),color:'#378add',width:2.5});legendItems.push(['sen(x)','#378add']);}
+  if(fn==='cos'||fn==='all'){curves.push({points:xs.map(x=>({x,y:Math.cos(x)})),color:'#1d9e75',width:2.5});legendItems.push(['cos(x)','#1d9e75']);}
+  if(fn==='tan'||fn==='all'){curves.push({points:xs.map(x=>{const tv=Math.tan(x);return{x,y:Math.abs(tv)>8?NaN:tv};}),color:'#ef9f27',width:2});legendItems.push(['tan(x)','#ef9f27']);}
+  const dotY=fn==='cos'?co:s;
+  if(fn!=='tan'){curves.push({dots:[{x:rad,y:dotY,label:'\u03b8'}],color:'#e24b4a'});legendItems.push(['\u03b8='+fmt(deg,1)+'\u00b0','#e24b4a']);}
+  makeLegend('legend-trig',legendItems);
+  setTimeout(()=>drawCartesian('chart-trig',curves,{xMin:-2*Math.PI,xMax:2*Math.PI,yMin:-2.5,yMax:2.5}),10);
+}
+
+function drawTrigCircle(rad,s,co){
+  const canvas=document.getElementById('trig-circle');
+  const ctx=canvas.getContext('2d');
+  const W=240,H=240,cx=120,cy=120,r=88;
+  canvas.width=W;canvas.height=H;
+  ctx.fillStyle='#141412';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='#242422';ctx.lineWidth=0.5;
+  [-1,0,1].forEach(i=>{
+    ctx.beginPath();ctx.moveTo(cx+i*r,cy-r-8);ctx.lineTo(cx+i*r,cy+r+8);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx-r-8,cy+i*r);ctx.lineTo(cx+r+8,cy+i*r);ctx.stroke();
+  });
+  // Circulo
+  ctx.strokeStyle='#3a3a37';ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI);ctx.stroke();
+  // Ejes con flechas
+  ctx.strokeStyle='#aaa89e';ctx.fillStyle='#aaa89e';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(cx-r-12,cy);ctx.lineTo(cx+r+12,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,cy+r+12);ctx.lineTo(cx,cy-r-12);ctx.stroke();
+  [[cx+r+12,cy,1,0],[cx-r-12,cy,-1,0],[cx,cy-r-12,0,-1],[cx,cy+r+12,0,1]].forEach(([tx,ty,dx,dy])=>{
+    ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(tx-dx*7-dy*3.5,ty-dy*7+dx*3.5);ctx.lineTo(tx-dx*7+dy*3.5,ty-dy*7-dx*3.5);ctx.closePath();ctx.fill();
+  });
+  // Labels ejes
+  ctx.font='italic 11px serif';ctx.fillStyle='#aaa89e';ctx.textAlign='left';ctx.fillText('x',cx+r+14,cy+4);
+  ctx.textAlign='center';ctx.fillText('y',cx,cy-r-14);
+  // Marcas 1,-1
+  ctx.font='10px sans-serif';ctx.fillStyle='#888780';ctx.textAlign='right';
+  ctx.fillText('1',cx-4,cy-r+4);ctx.fillText('-1',cx-4,cy+r+4);
+  ctx.textAlign='center';ctx.fillText('1',cx+r,cy+12);ctx.fillText('-1',cx-r,cy+12);
+  // Arco angulo
+  ctx.strokeStyle='#ef9f2780';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(cx,cy,22,0,-rad,rad>0);ctx.stroke();
+  ctx.fillStyle='#ef9f27';ctx.font='11px sans-serif';ctx.textAlign='left';ctx.fillText('\u03b8',cx+25,cy-8);
+  // Proyecciones
+  const px=cx+co*r,py=cy-s*r;
+  ctx.strokeStyle='#1d9e7580';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,cy);ctx.stroke();
+  ctx.setLineDash([]);
+  // Radio
+  ctx.strokeStyle='#378add';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,py);ctx.stroke();
+  // Punto
+  ctx.fillStyle='#378add';ctx.strokeStyle='#141412';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fill();ctx.stroke();
+  // Labels
+  ctx.fillStyle='#888780';ctx.font='10px sans-serif';ctx.textAlign='center';
+  ctx.fillText('cos',cx+co*r/2,cy+13);
+  ctx.fillStyle='#1d9e75';ctx.textAlign=co>=0?'left':'right';
+  ctx.fillText('sen',px+(co>=0?5:-5),cy-s*r/2+4);
+  ctx.fillStyle='#378add';ctx.font='10px sans-serif';ctx.textAlign=co>=0?'left':'right';
+  ctx.fillText('('+fmt(co,2)+', '+fmt(s,2)+')',px+(co>=0?7:-7),py-8);
+}
+
+// ── SISTEMA ──
+function calcSistema(){
+  const a1=parseFloat(document.getElementById('s_a1').value);
+  const b1=parseFloat(document.getElementById('s_b1').value);
+  const c1=parseFloat(document.getElementById('s_c1').value);
+  const a2=parseFloat(document.getElementById('s_a2').value);
+  const b2=parseFloat(document.getElementById('s_b2').value);
+  const c2=parseFloat(document.getElementById('s_c2').value);
+  const D=a1*b2-a2*b1;
+  const steps=[`Ec. 1: ${fmt(a1)}x + ${fmt(b1)}y = ${fmt(c1)}`,`Ec. 2: ${fmt(a2)}x + ${fmt(b2)}y = ${fmt(c2)}`,`D = (${fmt(a1)})(${fmt(b2)}) \u2212 (${fmt(a2)})(${fmt(b1)}) = ${fmt(D)}`];
+  let valsHTML='',solX=null,solY=null;
+  if(Math.abs(D)<1e-10){valsHTML=makeRow('Sistema','Sin soluci\u00f3n \u00fanica (D=0)');}
+  else{
+    const Dx=c1*b2-c2*b1,Dy=a1*c2-a2*c1;
+    solX=Dx/D;solY=Dy/D;
+    steps.push(`Dx=${fmt(Dx)}, Dy=${fmt(Dy)}`,`x=${fmt(Dx)}/${fmt(D)}=${fmt(solX)}`,`y=${fmt(Dy)}/${fmt(D)}=${fmt(solY)}`);
+    valsHTML=makeRow('D',fmt(D))+makeRow('x',fmt(solX),'accent')+makeRow('y',fmt(solY),'accent')+makeRow('Verif. ec.1',fmt(a1*solX+b1*solY)+' = '+fmt(c1),'green')+makeRow('Verif. ec.2',fmt(a2*solX+b2*solY)+' = '+fmt(c2),'green');
+  }
+  document.getElementById('steps-sistema').innerHTML=makeSteps(steps);
+  document.getElementById('vals-sistema').innerHTML=valsHTML;
+  document.getElementById('res-sistema').classList.remove('hidden');
+  makeLegend('legend-sistema',[[fmt(a1)+'x + '+fmt(b1)+'y = '+fmt(c1),'#378add'],[fmt(a2)+'x + '+fmt(b2)+'y = '+fmt(c2),'#1d9e75'],['Soluci\u00f3n','#ef9f27']]);
+  const span=solX!==null?Math.max(8,Math.abs(solX)*2.5+4):8;
+  const xs=rng(-span,span,100);
+  const l1=b1!==0?xs.map(x=>({x,y:(c1-a1*x)/b1})):[{x:c1/a1,y:-span*2},{x:c1/a1,y:span*2}];
+  const l2=b2!==0?xs.map(x=>({x,y:(c2-a2*x)/b2})):[{x:c2/a2,y:-span*2},{x:c2/a2,y:span*2}];
+  const cs=[{points:l1,color:'#378add',width:2.5},{points:l2,color:'#1d9e75',width:2.5}];
+  if(solX!==null)cs.push({dots:[{x:solX,y:solY,label:'('+fmt(solX)+', '+fmt(solY)+')'}],color:'#ef9f27'});
+  setTimeout(()=>drawCartesian('chart-sistema',cs),10);
+}
+
+// ── PROGRESIONES ──
+function calcProgresion(){
+  const tipo=document.getElementById('prog-tipo').value;
+  const a1=parseFloat(document.getElementById('prog-a1').value);
+  const r=parseFloat(document.getElementById('prog-r').value);
+  const n=parseInt(document.getElementById('prog-n').value);
+  const terms=[];
+  if(tipo==='aritmetica'){for(let i=0;i<n;i++)terms.push(a1+i*r);}
+  else{for(let i=0;i<n;i++)terms.push(a1*Math.pow(r,i));}
+  const an=terms[n-1];
+  const Sn=tipo==='aritmetica'?n*(a1+an)/2:(Math.abs(r-1)<1e-10?a1*n:a1*(1-Math.pow(r,n))/(1-r));
+  const sumData=terms.map((_,i)=>terms.slice(0,i+1).reduce((a,b)=>a+b,0));
+  const steps=tipo==='aritmetica'
+    ?[`d = ${fmt(r)}`,`a\u208d${n}\u208e = a\u2081+(n\u22121)d = ${fmt(a1)}+${n-1}\u00d7${fmt(r)} = ${fmt(an)}`,`S\u2099 = n(a\u2081+a\u2099)/2 = ${n}(${fmt(a1)}+${fmt(an)})/2 = ${fmt(Sn)}`]
+    :[`r = ${fmt(r)}`,`a\u208d${n}\u208e = a\u2081\u00b7r^(n\u22121) = ${fmt(a1)}\u00b7${fmt(r)}^${n-1} = ${fmt(an)}`,`S\u2099 = a\u2081(1\u2212r\u207f)/(1\u2212r) = ${fmt(Sn)}`,
+      ...(Math.abs(r)<1?[`S\u221e = a\u2081/(1\u2212r) = ${fmt(a1/(1-r))}`]:[])];
+  document.getElementById('steps-prog').innerHTML=makeSteps(steps);
+  document.getElementById('vals-prog').innerHTML=makeRow('a\u2081',fmt(a1))+makeRow(tipo==='aritmetica'?'d':'r',fmt(r))+makeRow('a\u208d'+n+'\u208e',fmt(an),'accent')+makeRow('S\u2099',fmt(Sn),'green')+(tipo==='geometrica'&&Math.abs(r)<1?makeRow('S\u221e',fmt(a1/(1-r))):'');
+  document.getElementById('terms-prog').innerHTML=terms.map((t,i)=>`a<sub>${i+1}</sub> = ${fmt(t,3)}`).join(' &middot; ');
+  document.getElementById('res-progresion').classList.remove('hidden');
+  makeLegend('legend-prog',[['T\u00e9rminos a\u2099','#378add'],['Suma acumulada S\u2099','#1d9e75']]);
+  setTimeout(()=>drawCartesian('chart-prog',[
+    {bars:terms,color:'#378add'},
+    {points:sumData.map((y,i)=>({x:i,y})),color:'#1d9e75',width:2.5}
+  ],{xMin:-0.5,xMax:n-0.5}),10);
+}
+</script>
+</body>
+</html>

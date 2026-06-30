@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiniela Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Pantalla inicial para poner los 3 nombres -->
+  <div id="setupOverlay" class="overlay">
+    <div class="setup-card">
+      <p class="eyebrow">Antes de arrancar</p>
+      <h1>Quiniela Mundial 2026</h1>
+      <p class="setup-sub">Pongan sus nombres para empezar a apostar marcadores. El que pierda en una jugada de la ruleta, invita.</p>
+      <div class="setup-inputs">
+        <input type="text" id="name1" placeholder="Jugador 1" maxlength="18">
+        <input type="text" id="name2" placeholder="Jugador 2" maxlength="18">
+        <input type="text" id="name3" placeholder="Jugador 3" maxlength="18">
+      </div>
+      <button id="startBtn" class="btn btn-primary">⚽ Comenzar quiniela</button>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-eyebrow">Eliminación directa · 2026</span>
+        <h1 class="brand-title">Quiniela Mundial</h1>
+      </div>
+      <div class="topbar-actions">
+        <button id="editNamesBtn" class="btn-ghost">✏️ Nombres</button>
+        <button id="resetBtn" class="btn-ghost">🔄 Reiniciar</button>
+      </div>
+    </div>
+    <div id="scoreboard" class="scoreboard"></div>
+  </header>
+
+  <main id="rounds"></main>
+
+  <!-- Modal de la ruleta de castigo -->
+  <div id="wheelModal" class="overlay hidden">
+    <div class="wheel-card">
+      <p class="eyebrow eyebrow-red">Quedó más lejos del resultado</p>
+      <h2>Le toca girar a <span id="wheelLoserName">—</span></h2>
+      <p class="wheel-sub">Lo que salga, lo cumple hoy mismo 😅</p>
+      <div class="wheel-wrap">
+        <div id="wheelPointer">▼</div>
+        <div id="wheel" class="wheel"></div>
+      </div>
+      <button id="spinBtn" class="btn btn-primary">🎡 Girar la ruleta</button>
+      <p id="wheelResult" class="wheel-result"></p>
+      <button id="closeWheelBtn" class="btn-ghost">Cerrar</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>Los marcadores y predicciones se guardan solo en este navegador (localStorage).</p>
+  </footer>
+
+<script src="app.js"></script>
+</body>
+</html>

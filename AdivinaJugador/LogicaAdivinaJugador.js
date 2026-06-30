@@ -47,15 +47,19 @@ function norm(s) {
   return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 }
 
+// function highlightMatch(name, query) {
+//   const nName = norm(name);
+//   const nQuery = norm(query);
+//   const idx = nName.indexOf(nQuery);
+//   if (idx === -1) return name;
+//   const before = name.slice(0, idx);
+//   const match  = name.slice(idx, idx + query.length);
+//   const after  = name.slice(idx + query.length);
+//   return `${before}<span class="suggestion-match">${match}</span>${after}`;
+// }
+
 function highlightMatch(name, query) {
-  const nName = norm(name);
-  const nQuery = norm(query);
-  const idx = nName.indexOf(nQuery);
-  if (idx === -1) return name;
-  const before = name.slice(0, idx);
-  const match  = name.slice(idx, idx + query.length);
-  const after  = name.slice(idx + query.length);
-  return `${before}<span class="suggestion-match">${match}</span>${after}`;
+    return name;
 }
 
 function initGame() {

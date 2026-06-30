@@ -155,6 +155,8 @@
     background: var(--surface2);
   }
 
+  
+
   .suggestion-flag {
     font-size: 11px;
     color: var(--muted);
@@ -164,6 +166,19 @@
     color: var(--accent);
     font-weight: 600;
   }
+
+  .suggestion-match {
+    color: var(--accent);
+    font-weight: 600;
+    display: inline;
+    font-family: inherit;
+}
+
+.suggestion-item {
+    letter-spacing: normal;
+    word-spacing: normal;
+    font-kerning: none;
+}
 
   .error-msg {
     font-size: 13px;
