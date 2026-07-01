@@ -49,7 +49,26 @@ h1,h2{margin:0;}
   text-align:center;
   box-shadow:var(--shadow);
   border:1px solid rgba(0,0,0,.06);
+  max-height:92vh;
+  overflow-y:auto;
+  position:relative;
 }
+
+.close-x{
+  position:absolute;
+  top:12px; right:12px;
+  width:32px; height:32px;
+  border-radius:50%;
+  border:none;
+  background:rgba(12,31,21,.08);
+  color:var(--ink);
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+  line-height:1;
+  display:flex; align-items:center; justify-content:center;
+}
+.close-x:hover{background:rgba(12,31,21,.16);}
 
 .eyebrow{
   text-transform:uppercase;
@@ -415,20 +434,18 @@ main#rounds{
   width:100%; height:100%;
   border-radius:50%;
   border:6px solid var(--ink);
-  position:relative;
-  transition:transform 3.2s cubic-bezier(.17,.67,.2,1.01);
+  display:block;
   box-shadow:0 0 0 4px var(--gold) inset;
+  transition:transform 3.2s cubic-bezier(.17,.67,.2,1.01);
+  transform-origin:50% 50%;
 }
-.wheel span.wheel-label{
-  position:absolute;
-  left:50%; top:50%;
+.wheel text{
   font-family:'Oswald', sans-serif;
   font-weight:700;
-  font-size:.78rem;
-  color:#fff;
-  text-shadow:0 1px 2px rgba(0,0,0,.4);
-  transform-origin:0 0;
-  white-space:nowrap;
+  fill:#fff;
+  paint-order:stroke;
+  stroke:rgba(0,0,0,.35);
+  stroke-width:2px;
 }
 .wheel-result{
   font-family:'Anton', sans-serif;

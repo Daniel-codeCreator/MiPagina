@@ -44,12 +44,13 @@
   <!-- Modal de la ruleta de castigo -->
   <div id="wheelModal" class="overlay hidden">
     <div class="wheel-card">
+      <button id="closeWheelX" class="close-x" aria-label="Cerrar">✕</button>
       <p class="eyebrow eyebrow-red">Quedó más lejos del resultado</p>
       <h2>Le toca girar a <span id="wheelLoserName">—</span></h2>
       <p class="wheel-sub">Lo que salga, lo cumple hoy mismo 😅</p>
       <div class="wheel-wrap">
         <div id="wheelPointer">▼</div>
-        <div id="wheel" class="wheel"></div>
+        <svg id="wheel" class="wheel" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
       <button id="spinBtn" class="btn btn-primary">🎡 Girar la ruleta</button>
       <p id="wheelResult" class="wheel-result"></p>

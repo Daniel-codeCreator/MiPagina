@@ -1,7 +1,3 @@
-/* =========================================================
-   QUINIELA MUNDIAL 2026 — lógica principal
-   ========================================================= */
-
 const STORAGE_KEY = 'quiniela_mundial_2026_v1';
 
 const ROUND_DEFS = [
@@ -46,7 +42,7 @@ const R32_SEEDS = [
   { a: 'Bélgica',           b: 'Senegal' },
   { a: 'Brasil',            b: 'Japón',                real: { a: 2, b: 1 } },
   { a: 'Costa de Marfil',   b: 'Noruega',              real: { a: 1, b: 2 } },
-  { a: 'México',            b: 'Ecuador' },
+  { a: 'México',            b: 'Ecuador',              real: { a: 2, b: 0 } },
   { a: 'Inglaterra',        b: 'Congo RD' },
   { a: 'Argentina',         b: 'Cabo Verde' },
   { a: 'Australia',         b: 'Egipto' },
@@ -438,20 +434,38 @@ function buildWheelSegments() {
   const n = PRIZES.length;
   const sliceDeg = 360 / n;
   const colors = ['#E8B73C', '#2BA89A', '#E8643C', '#D7263D', '#6B4FA0', '#3D8FB0'];
-  const gradientParts = PRIZES.map((p, i) =>
-    `${colors[i % colors.length]} ${i * sliceDeg}deg ${(i + 1) * sliceDeg}deg`
-  );
-  wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+  const cx = 120, cy = 120, r = 112;
 
-  wheel.innerHTML = '';
-  PRIZES.forEach((p, i) => {
-    const angle = i * sliceDeg + sliceDeg / 2;
-    const label = document.createElement('span');
-    label.className = 'wheel-label';
-    label.textContent = p.replace(/\s*[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim();
-    label.style.transform = `rotate(${angle}deg) translate(62px) rotate(90deg) translateX(-50%)`;
-    wheel.appendChild(label);
-  });
+  // Convención: ángulo medido en sentido horario desde arriba (12 en punto),
+  // igual que la rotación del puntero fijo. x = cx + r*sin(a), y = cy - r*cos(a).
+  const pt = (angleDeg, radius) => {
+    const a = (angleDeg * Math.PI) / 180;
+    return [cx + radius * Math.sin(a), cy - radius * Math.cos(a)];
+  };
+
+  let svg = '';
+  for (let i = 0; i < n; i++) {
+    const startA = i * sliceDeg;
+    const endA = (i + 1) * sliceDeg;
+    const [x1, y1] = pt(startA, r);
+    const [x2, y2] = pt(endA, r);
+    const largeArc = sliceDeg > 180 ? 1 : 0;
+    const color = colors[i % colors.length];
+    svg += `<path d="M ${cx} ${cy} L ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${largeArc} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z" fill="${color}" stroke="#0C1F15" stroke-width="1.5"/>`;
+  }
+
+  for (let i = 0; i < n; i++) {
+    const centerA = i * sliceDeg + sliceDeg / 2;
+    const [lx, ly] = pt(centerA, r * 0.62);
+    const label = PRIZES[i].replace(/\s*[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim();
+    // El texto se dibuja alineado radialmente; si cae en la mitad inferior
+    // se le suma 180° para que no quede al revés.
+    let textRot = centerA;
+    if (textRot > 90 && textRot < 270) textRot += 180;
+    svg += `<text x="${lx.toFixed(2)}" y="${ly.toFixed(2)}" font-size="11" text-anchor="middle" dominant-baseline="middle" transform="rotate(${textRot.toFixed(2)} ${lx.toFixed(2)} ${ly.toFixed(2)})">${escapeHtml(label)}</text>`;
+  }
+
+  wheel.innerHTML = svg;
 }
 
 document.getElementById('spinBtn').addEventListener('click', () => {
@@ -480,6 +494,10 @@ document.getElementById('spinBtn').addEventListener('click', () => {
 });
 
 document.getElementById('closeWheelBtn').addEventListener('click', () => {
+  document.getElementById('wheelModal').classList.add('hidden');
+});
+
+document.getElementById('closeWheelX').addEventListener('click', () => {
   document.getElementById('wheelModal').classList.add('hidden');
 });
 
