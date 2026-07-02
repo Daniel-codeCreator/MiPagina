@@ -43,7 +43,7 @@ const R32_SEEDS = [
   { a: 'Brasil',            b: 'Japón',                real: { a: 2, b: 1 } },
   { a: 'Costa de Marfil',   b: 'Noruega',              real: { a: 1, b: 2 } },
   { a: 'México',            b: 'Ecuador',              real: { a: 2, b: 0 } },
-  { a: 'Inglaterra',        b: 'Congo RD' },
+  { a: 'Inglaterra',        b: 'Congo RD'},
   { a: 'Argentina',         b: 'Cabo Verde' },
   { a: 'Australia',         b: 'Egipto' },
   { a: 'Suiza',             b: 'Argelia' },
