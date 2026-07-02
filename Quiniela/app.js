@@ -33,17 +33,17 @@ let currentWheelMatchId = null;
    cruzan hasta semifinales. */
 const R32_SEEDS = [
   { a: 'Alemania',          b: 'Paraguay',             real: { a: 1, b: 1 }, penalty: 'B' }, // Paraguay avanza por penales
-  { a: 'Francia',           b: 'Suecia' },
+  { a: 'Francia',           b: 'Suecia' ,              real: { a: 3, b: 0 }   },
   { a: 'Sudáfrica',         b: 'Canadá',               real: { a: 0, b: 1 } },
   { a: 'Países Bajos',      b: 'Marruecos',            real: { a: 1, b: 1 }, penalty: 'B' }, // Marruecos avanza por penales
   { a: 'Portugal',          b: 'Croacia' },
   { a: 'España',            b: 'Austria' },
-  { a: 'Estados Unidos',    b: 'Bosnia y Herzegovina' },
-  { a: 'Bélgica',           b: 'Senegal' },
+  { a: 'Estados Unidos',    b: 'Bosnia y Herzegovina', real: { a: 2, b: 0} },
+  { a: 'Bélgica',           b: 'Senegal',              real: { a: 3, b: 2 }  },     
   { a: 'Brasil',            b: 'Japón',                real: { a: 2, b: 1 } },
   { a: 'Costa de Marfil',   b: 'Noruega',              real: { a: 1, b: 2 } },
   { a: 'México',            b: 'Ecuador',              real: { a: 2, b: 0 } },
-  { a: 'Inglaterra',        b: 'Congo RD'},
+  { a: 'Inglaterra',        b: 'Congo RD',             real: { a: 2, b: 1 } },
   { a: 'Argentina',         b: 'Cabo Verde' },
   { a: 'Australia',         b: 'Egipto' },
   { a: 'Suiza',             b: 'Argelia' },
