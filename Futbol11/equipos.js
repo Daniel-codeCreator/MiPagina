@@ -13,7 +13,8 @@ jugadores:[
 {nombre:"Pedri", posiciones:["MC","MCO"]},
 {nombre:"Dani Olmo", posiciones:["MCO","DC"]},
 {nombre:"Raphinha", posiciones:["EI","ED","MCO"]},
-{nombre:"Lamine Yamal", posiciones:["ED","EI","MCO"]}
+{nombre:"Lamine Yamal", posiciones:["ED","EI","MCO"]},
+{nombre:"Fermìn Lopez", posiciones:["MCO"]}
 
 ]
 },
@@ -163,7 +164,7 @@ jugadores:[
 {nombre:"Calafiori", posiciones:["LI","DFC"]},
 {nombre:"Declan Rice", posiciones:["MCD","MC"]},
 {nombre:"Odegaard", posiciones:["MCO","MC"]},
-{nombre:"Saka", posiciones:["ED","EI"]},
+{nombre:"Saka", posiciones:["ED"]},
 {nombre:"Martinelli", posiciones:["EI","ED"]},
 {nombre:"Havertz", posiciones:["DC","MCO"]}
 

@@ -101,8 +101,7 @@ function showSuggestions(query) {
 
   box.innerHTML = matches.slice(0, 6).map((p, i) =>
     `<div class="suggestion-item" data-idx="${i}" data-name="${p.name}">
-      ${highlightMatch(p.name, query)}
-      <span class="suggestion-flag">${p.nat} · ${p.pos}</span>
+        ${p.name}
     </div>`
   ).join("");
 
@@ -223,8 +222,32 @@ input.addEventListener("keydown", e => {
     if (e.key === "ArrowDown")  { e.preventDefault(); navigateSuggestions(1); return; }
     if (e.key === "ArrowUp")    { e.preventDefault(); navigateSuggestions(-1); return; }
     if (e.key === "Escape")     { closeSuggestions(); return; }
-    if (e.key === "Enter")      { e.preventDefault(); submitGuess(); return; }
-  } else {
+    
+    if (e.key == "Enter") {
+      e.preventDefault();
+
+      const items = document.querySelectorAll(".suggestion-item"); 
+
+      //si hay una sugerencia seleccionada con las flechas en las etiquetas
+      if (selectedIdx >= 0 && items [selectedIdx]) {
+        input.value = items[selectedIdx].dataset.name;
+      }
+      //si no hay seleccionada pero si existen sugerencias, tomar autamticamente la primera
+      else if (items.length > 0 ) {
+        input.value = items[0].dataset.name;
+      }
+
+      submitGuess();
+      return;
+
+    }
+
+    submitGuess();
+    return;
+
+  } 
+  
+  else {
     if (e.key === "Enter") submitGuess();
   }
 });
