@@ -20,6 +20,8 @@ const PRIZES = [
   'comprar agua para todos 💧',
   'comprar Tortrix y agua para todos 😂',
   'Comprar un Chocolate para todos 🍫',
+  'Comprar un helado para todos 🍦',
+  'Comprar una pizza para todos 🍕'
 
 ];
 
