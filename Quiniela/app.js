@@ -19,7 +19,8 @@ const PRIZES = [
   'comprar Tortrix para todos 🌽',
   'comprar agua para todos 💧',
   'comprar Tortrix y agua para todos 😂',
-  'invitar un refresco a cada quien 🥤',
+  'Comprar un Chocolate para todos 🍫',
+
 ];
 
 let state = null;
