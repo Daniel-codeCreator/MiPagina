@@ -5,6 +5,7 @@ const ROUND_DEFS = [
   { id: 'r16',   name: 'Octavos de Final',       tag: 'R16', count: 8  },
   { id: 'qf',    name: 'Cuartos de Final',       tag: 'QF',  count: 4  },
   { id: 'sf',    name: 'Semifinales',            tag: 'SF',  count: 2  },
+  { id: '3p',    name: 'Tercer Puesto',          tag: '3P',  count: 1  },
   { id: 'final', name: 'Gran Final',             tag: 'F',   count: 1  },
 ];
 
@@ -106,6 +107,24 @@ function prevRoundId(roundId) {
   const idx = ROUND_DEFS.findIndex(r => r.id === roundId);
   return idx > 0 ? ROUND_DEFS[idx - 1].id : null;
 }
+function getLoserName(id) {
+  const m = state.matches[id];
+  const teams = getMatchTeams(id);
+  
+  // Si la semifinal no está lista o no tiene resultado real, NO hay perdedor todavía
+  if (!teams.a || !teams.b) return null;
+  if (m.real.a === null || m.real.b === null || m.real.a === '' || m.real.b === '') return null;
+  
+  const a = Number(m.real.a), b = Number(m.real.b);
+  
+  // El perdedor es el opuesto al que ganó
+  if (a > b) return teams.b;
+  if (b > a) return teams.a;
+  if (m.penaltyWinner === 'A') return teams.b;
+  if (m.penaltyWinner === 'B') return teams.a;
+  
+  return null;
+}
 
 function getMatchTeams(id) {
   const m = state.matches[id];
@@ -115,6 +134,24 @@ function getMatchTeams(id) {
       b: m.teamB && m.teamB.trim() ? m.teamB.trim() : null,
     };
   }
+
+  // --- CORREGIDO: Usar '3p' que es el ID real de tu ronda ---
+  if (m.round === '3p') {
+    return {
+      a: getLoserName('sf-1'), // El que perdió la Semifinal 1 (Francia)
+      b: getLoserName('sf-2'), // El que perdió la Semifinal 2 (Inglaterra)
+    };
+  }
+
+  // --- LÓGICA PARA LA FINAL ---
+  if (m.round === 'final') {
+    return {
+      a: getWinnerName('sf-1'), // España
+      b: getWinnerName('sf-2'), // Argentina
+    };
+  }
+
+  // Comportamiento por defecto para Octavos, Cuartos y Semis
   const prev = prevRoundId(m.round);
   const feederA = `${prev}-${2 * m.index - 1}`;
   const feederB = `${prev}-${2 * m.index}`;
