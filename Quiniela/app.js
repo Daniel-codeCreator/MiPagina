@@ -543,8 +543,36 @@ document.getElementById('closeWheelX').addEventListener('click', () => {
 
 /* ---------------- Init ---------------- */
 
+/* ---------------- Init Modificado para No Perder Datos ---------------- */
+
 function init() {
   state = loadState() || createDefaultState();
+  
+  // --- PARCHE DE MIGRACIÓN SEGURA ---
+  // Si los datos existen pero no tienen la ronda del Tercer Puesto mapeada,
+  // la inyectamos manualmente en el estado sin tocar nada de lo que ya guardaron.
+  if (state && state.matches) {
+    const thirdPlaceMatchId = '3p-1';
+    if (!state.matches[thirdPlaceMatchId]) {
+      state.matches[thirdPlaceMatchId] = {
+        id: thirdPlaceMatchId,
+        round: '3p',
+        index: 1,
+        teamA: '',
+        teamB: '',
+        real: { a: null, b: null },
+        penaltyWinner: null,
+        predictions: {
+          p1: { a: null, b: null },
+          p2: { a: null, b: null },
+          p3: { a: null, b: null },
+        },
+      };
+      saveState(); // Guardamos el parche en el navegador
+    }
+  }
+  // ------------------------------------
+
   if (!state.names || state.names.every(n => !n || !n.trim())) {
     showSetup(false);
   } else {
